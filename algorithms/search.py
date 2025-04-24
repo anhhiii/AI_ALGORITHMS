@@ -296,9 +296,6 @@ def beam_search(initial_state, goal_state, beam_width=2):
         queue = next_level
 
 def and_or_search(initial_state, goal_state):
-    """
-    Perform an AND-OR search to solve the problem.
-    """
     class Problem:
         def __init__(self, initial, goal):
             self.initial = initial
@@ -311,31 +308,111 @@ def and_or_search(initial_state, goal_state):
             return get_neighbors(state)
 
         def result(self, state, action):
-            return [action]  # Return the resulting state as a list for AND-OR search
+            return [action]
 
     problem = Problem(initial_state, goal_state)
-    return or_search(initial_state, problem, path=[])
+    memo = {}
+    return or_search(initial_state, problem, path=[], memo=memo)
 
-def or_search(state, problem, path):
+
+def or_search(state, problem, path, memo):
     if problem.goal_test(state):
         return [state]
 
     if state in path:
-        return None
+        return None  # tránh lặp
+
+    if state in memo:
+        return memo[state]
 
     for action in problem.actions(state):
         result_states = problem.result(state, action)
-        plan = and_search(result_states, problem, path + [state])
+        plan = and_search(result_states, problem, path + [state], memo)
         if plan:
-            return [state] + plan  # Trả về đường đi từ state đến goal
+            memo[state] = [state] + plan
+            return memo[state]
 
+    memo[state] = None
     return None
 
-def and_search(states, problem, path):
+
+def and_search(states, problem, path, memo):
     plans = []
     for s in states:
-        plan = or_search(s, problem, path)
+        plan = or_search(s, problem, path, memo)
         if not plan:
             return None
-        plans += plan  # Nối tất cả đường đi lại
+        plans.extend(plan)  # dùng extend thay vì cộng để tránh lặp kế hoạch lồng nhau
     return plans
+
+
+
+# ---- Cấu hình ----
+POPULATION_SIZE = 30
+GENOME_LENGTH = 30
+GENERATIONS = 200
+MUTATION_RATE = 0.2
+
+
+def genetic_algorithm(initial_state, goal_state):
+    def flatten(state):
+        return [num for row in state for num in row]
+
+    def hamming_distance(state):
+        flat_s = flatten(state)
+        flat_g = flatten(goal_state)
+        return sum(1 for a, b in zip(flat_s, flat_g) if a != b and a != 0)
+
+    def generate_candidate():
+        path = [initial_state]
+        current = initial_state
+        visited = {current}
+
+        for _ in range(GENOME_LENGTH):
+            neighbors = [n for n in get_neighbors(current) if n not in visited]
+            if not neighbors:
+                break
+            current = random.choice(neighbors)
+            visited.add(current)
+            path.append(current)
+        return path
+
+    def evaluate(candidate):
+        return -hamming_distance(candidate[-1])
+
+    def crossover(p1, p2):
+        if len(p1) < 3 or len(p2) < 3:
+            return p1[:]  # hoặc return p2[:], hoặc chọn random giữa 2
+
+        split = random.randint(1, min(len(p1), len(p2)) - 2)
+        return p1[:split] + p2[split:]
+
+
+    def mutate(candidate):
+        idx = random.randint(1, len(candidate) - 1)
+        base = candidate[idx - 1]
+        visited = set(candidate[:idx])
+        neighbors = [n for n in get_neighbors(base) if n not in visited]
+        if not neighbors:
+            return candidate
+        new_state = random.choice(neighbors)
+        return candidate[:idx] + [new_state]
+
+
+    population = [generate_candidate() for _ in range(POPULATION_SIZE)]
+
+    for _ in range(GENERATIONS):
+        population.sort(key=evaluate, reverse=True)
+        next_gen = population[:2]
+        while len(next_gen) < POPULATION_SIZE:
+            p1, p2 = random.sample(population[:5], 2)
+            child = crossover(p1, p2)
+            if random.random() < MUTATION_RATE:
+                child = mutate(child)
+            next_gen.append(child)
+        population = next_gen
+
+    best = max(population, key=evaluate)
+    if best[-1] == goal_state:
+        return best
+    return None
