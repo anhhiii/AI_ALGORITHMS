@@ -1,4 +1,10 @@
-from gui.app import main
+from gui.main_window import PuzzleApp
+import tkinter as tk
 
-if __name__ == '__main__':
+def main():
+    root = tk.Tk()
+    app = PuzzleApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
     main()
