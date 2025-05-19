@@ -589,15 +589,38 @@ AC-3 không phù hợp trực tiếp cho 8-puzzle vì bài toán là động, nh
 Forward Checking là lựa chọn tốt hơn Backtracking, vì nó giảm số nhánh cần thử, nhưng vẫn không thể cạnh tranh với các thuật toán heuristic như A* trong 8-puzzle.
 
 ### 2.6. Học tăng cường (Reinforcement Learning)
-Q-Learning là thuật toán học chính sách hành động dựa trên kinh nghiệm (thử - sai), không cần mô hình môi trường.
-Nó học thông qua việc cập nhật bảng Q-Table với công thức:
- Q(a,a) <-- Q(s,a) + alpha[ r + gama.maxQ(a', a') - Q(s,a)]
- s: trạng thái hiện tại
- a: hành động thực hiện
- r: phần thưởng nhận được
- s': trạng thái mới
- alpha: learning rate
- gama: discount factor
+
+Q-Learning là một thuật toán học tăng cường (Reinforcement Learning - RL) thuộc nhóm không cần mô hình (model-free), dựa trên kinh nghiệm thử-và-sai để học chính sách tối ưu mà không cần biết trước mô hình môi trường.
+
+**Tổng quan về Q-Learning**
+
+_Khái niệm cơ bản_
+
+Q-Learning học một hàm giá trị hành động (Q-function) để ước lượng phần thưởng kỳ vọng trong tương lai cho mỗi cặp trạng thái-hành động (state-action pair). Mục tiêu là tìm chính sách tối ưu (policy) giúp tối đa hóa tổng phần thưởng dài hạn.
+
+_Môi trường:_ Một tập trạng thái S, hành động A, và phần thưởng R
+
+_Hàm Q:_ Q(s,a) biểu thị giá trị kỳ vọng của việc thực hiện hành động a trong trạng thái s, sau đó tuân theo chính sách tối ưu.
+
+_Công thức cập nhật Q:_ 
+
+![image](https://github.com/user-attachments/assets/738d8ff1-ce76-47b6-b582-90348946c4b0)
+![image](https://github.com/user-attachments/assets/161cad31-128c-4c81-8400-e618056fb462)
+
+_Chính sách hành động_
+
+Q-Learning sử dụng chiến lược khám phá-khai thác (exploration-exploitation), thường thông qua chính sách <math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex"> \epsilon </annotation></semantics></math>-greedy:
+
+- Với xác suất <math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex"> \epsilon </annotation></semantics></math>, chọn hành động ngẫu nhiên (khám phá).
+
+- Với xác suất <math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex"> 1-\epsilon </annotation></semantics></math>, chọn hành động có giá trị Q cao nhất (khai thác).
+
+
+Cập nhật giá trị Q theo công thức trên.
+
+
+Lặp lại: Tiếp tục cho đến khi đạt trạng thái mục tiêu hoặc hết số bước tối đa trong episode. Lặp lại nhiều episode để bảng Q hội tụ.
+Sử dụng chính sách: Sau khi học, chọn hành động có giá trị Q cao nhất ở mỗi trạng thái để đạt mục tiêu.
 
  Ưu điểm của Q-Learning
  | Tiêu chí                               | Mô tả                                                                   |
