@@ -257,7 +257,7 @@ Cách hoạt động:
 - Tại mỗi Or-node, chọn một hành động và tạo And-node cho các kết quả có thể.
 - Tại mỗi And-node, tìm đường dẫn đến mục tiêu cho mọi nhánh (kết quả).
 - Nếu một nhánh không dẫn đến mục tiêu, quay lui và thử hành động khác.
-- 
+  
 _Áp dụng vào 8-puzzle_
 
 - Môi trường không xác định: Giả sử hành động di chuyển ô trống có xác suất thất bại (ví dụ: di chuyển lên có 70% thành công, 30% thất bại và giữ nguyên trạng thái).
@@ -293,39 +293,59 @@ _Nhược điểm:_ Phức tạp, cần xây dựng toàn bộ cây giải pháp
 **Partially Observable Search**
 
 _Mô tả thuật toán_
+
 Partially Observable Search được sử dụng trong môi trường quan sát không đầy đủ, nơi tác nhân chỉ biết một phần của trạng thái:
 
 - Tác nhân duy trì một belief state (tập hợp các trạng thái có thể xảy ra) dựa trên quan sát.
 - Mỗi hành động cập nhật belief state dựa trên quan sát mới.
 - Tìm kiếm đường đi từ belief state ban đầu đến belief state đích (chứa trạng thái mục tiêu).
-- 
+  
 _Áp dụng vào 8-puzzle_
 
 Quan sát không đầy đủ:
 - Giả sử chỉ hàng đầu tiên của bảng là nhìn thấy: ((1, 2, 3), (-1, -1, -1), (-1, -1, -1)).
 - Tác nhân không biết trạng thái đầy đủ, chỉ biết ô trống nằm đâu đó ở 2 hàng dưới.
+  
 Belief State ban đầu:
+
 - Tập hợp các trạng thái có thể:
+  
     State 1: ((1, 2, 3), (4, 5, 6), (0, 7, 8)).
+  
     State 2: ((1, 2, 3), (5, 6, 7), (4, 0, 8)).
+  
     State 3: ((1, 2, 3), (5, 6, 8), (0, 4, 7)).
+  
 Mục tiêu:
+
 - Belief State đích: Chứa trạng thái ((1, 2, 3), (4, 5, 6), (7, 8, 0)).
 Bước thực hiện:
 - Quan sát ban đầu: Chỉ biết hàng đầu 1, 2, 3, tạo belief state gồm 3 trạng thái trên.
 - Thực hiện hành động:
+  
     Hành động "di chuyển ô trống xuống" (giả sử tác nhân đoán ô trống ở (2,0)).
     Cập nhật belief state dựa trên quan sát mới:
+  
       State 1: Ô trống từ (2,0) xuống → Không thể (đã ở hàng cuối) → Loại bỏ.
+  
       State 2: Ô trống từ (2,1) xuống → Không thể → Loại bỏ.
+  
       State 3: Ô trống từ (2,0) xuống → Không thể → Loại bỏ.
+  
     Nếu không còn trạng thái nào trong belief state → Thất bại, quay lui.
+  
 - Thử hành động khác:
+
     Hành động "di chuyển ô trống phải":
+  
       State 1: (2,0) → (2,1): ((1, 2, 3), (4, 5, 6), (7, 0, 8)).
+  
       State 2: (2,1) → (2,2): ((1, 2, 3), (5, 6, 7), (4, 8, 0)).
+  
       State 3: (2,0) → (2,1): ((1, 2, 3), (5, 6, 8), (4, 0, 7)).
+  
     Quan sát mới (giả sử thấy ô trống ở (2,2)): Chỉ giữ State 2, loại bỏ State 1 và State 3.
+  
 - Tiếp tục: Từ State 2, tiếp tục di chuyển đến trạng thái đích.
 
 _Ưu điểm:_ Xử lý được môi trường quan sát không đầy đủ, duy trì belief state linh hoạt.
@@ -351,18 +371,30 @@ Belief State ban đầu: Như trên: 3 trạng thái có thể ((1, 2, 3), (4, 5
 Belief State đích: Chứa trạng thái mục tiêu: ((1, 2, 3), (4, 5, 6), (7, 8, 0)).
 
 Bước thực hiện:
+
   Xây dựng không gian niềm tin:
+  
   - Mỗi node là một belief state.
   - Mỗi hành động (lên, xuống, trái, phải) chuyển belief state hiện tại sang belief state mới.
+  - 
 Tìm kiếm:
+
   Dùng BFS hoặc A* trên không gian niềm tin.
+  
   Hàm heuristic (nếu dùng A*): Số ô sai vị trí trung bình trong belief state.
+  
 Cập nhật belief state:
+
   Hành động "phải":
+  
     State 1: (2,0) → (2,1): ((1, 2, 3), (4, 5, 6), (7, 0, 8)).
+    
     State 2: (2,1) → (2,2): ((1, 2, 3), (5, 6, 7), (4, 8, 0)).
+    
     State 3: (2,0) → (2,1): ((1, 2, 3), (5, 6, 8), (4, 0, 7)).
+    
   Belief State mới: Tập hợp 3 trạng thái này.
+  
 Tiếp tục: Lặp lại cho đến khi belief state chỉ chứa trạng thái đích.
 
 _Ưu điểm:_ Tổng quát, có thể kết hợp với các thuật toán tìm kiếm khác (BFS, A*).
@@ -394,24 +426,28 @@ Belief State Search là lựa chọn mạnh mẽ nhất trong môi trường ph�
 
 ### 2.5. Tìm kiếm trong môi trường không có ràng buộc (Constraint Satisfaction Problem)
 
-- Các thuật toán chính: Backtracking, AC-3 Search Algorithm, Forward Checking
+Các thuật toán chính: Backtracking, AC-3 Search Algorithm, Forward Checking
 
 **Bài toán 8-puzzle dưới dạng CSP**
   
 Trong bài toán 8-puzzle, ta có một bảng 3x3 với 9 ô, chứa các số từ 0 đến 8, trong đó 0 là ô trống. Mục tiêu là sắp xếp bảng về trạng thái đích (ví dụ: ((1, 2, 3), (4, 5, 6), (7, 8, 0))).
 
 Khi mô hình hóa dưới dạng CSP:
+
 - Biến (Variables): Mỗi ô (r, c) trên bảng là một biến, tổng cộng 9 biến (ô (0,0), (0,1), ..., (2,2)).
 - Miền giá trị (Domains): Mỗi biến có thể nhận giá trị từ 0 đến 8, nhưng vì đây là bài 8-puzzle, mỗi số chỉ được xuất hiện đúng một lần.
 - Ràng buộc (Constraints):
--- Ràng buộc All-Different: Mỗi số từ 0 đến 8 phải xuất hiện đúng một lần trên bảng (không có số nào trùng lặp).
--- Ràng buộc trạng thái đích: Trạng thái cuối cùng phải khớp với trạng thái đích (ví dụ: ô (0,0) = 1, ô (0,1) = 2, ..., ô (2,2) = 0).
+  - Ràng buộc All-Different: Mỗi số từ 0 đến 8 phải xuất hiện đúng một lần trên bảng (không có số nào trùng lặp).
+  - Ràng buộc trạng thái đích: Trạng thái cuối cùng phải khớp với trạng thái đích (ví dụ: ô (0,0) = 1, ô (0,1) = 2, ..., ô (2,2) = 0).
   
 Mục tiêu của các thuật toán CSP là gán giá trị cho từng ô sao cho thỏa mãn tất cả các ràng buộc.
   
 **Backtracking**
+
 _Mô tả thuật toán_
+
 Backtracking là một phương pháp tìm kiếm dựa trên thử-và-sai (trial-and-error), thường được sử dụng trong CSP. Ý tưởng chính là:
+
 - Bắt đầu từ trạng thái ban đầu và thử từng nước đi hợp lệ.
 - Nếu nước đi hiện tại không dẫn đến lời giải, quay lại (backtrack) trạng thái trước đó và thử nước đi khác.
 - Tiếp tục cho đến khi tìm được trạng thái mục tiêu (goal state) hoặc xác định không có lời giải.
@@ -419,16 +455,23 @@ Backtracking là một phương pháp tìm kiếm dựa trên thử-và-sai (tri
 _Áp dụng cho 8-Puzzle_
 
 Bước khởi tạo:
+
 - Bảng 3x3 ban đầu: [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]] (-1 nghĩa là chưa gán).
 - Cố định ô (2,2) = 0 (theo trạng thái đích).
 - Mảng used để theo dõi số nào đã được sử dụng: used = [True, False, ..., False] (0 đã dùng).
+  
 Gán giá trị:
+
 - Bắt đầu từ ô (0,0) (idx = 0), gán một số từ 1 đến 8 chưa được dùng.
 - Tiếp tục với ô (0,1), (0,2), ..., (2,1), bỏ qua (2,2).
+  
 Kiểm tra ràng buộc:
+
 - Ràng buộc All-Different: Đảm bảo không có số nào trùng lặp (dùng mảng used).
 - Khi điền đủ 8 ô, kiểm tra trạng thái có khả thi (is_solvable) và có khớp với GOAL_STATE không.
+  
 Quay lui:
+
 - Nếu trạng thái không thỏa mãn (không khả thi hoặc không khớp GOAL_STATE), quay lui: bỏ số vừa gán, thử số khác.
 - Nếu thử hết số tại một ô mà không thành công, quay lui lên ô trước đó.
 
@@ -441,30 +484,45 @@ _Nhược điểm:_ Không hiệu quả vì phải thử tất cả khả năng,
 **AC-3 Search Algorithm**
 
 _Mô tả thuật toán_
-AC-3 (Arc Consistency Algorithm #3) là một thuật toán tiền xử lý trong CSP, dùng để giảm miền giá trị của các biến trước khi tìm kiếm. Sau đó, nó thường kết hợp với Backtracking để tìm lời giải. Cách hoạt động:
+
+AC-3 (Arc Consistency Algorithm #3) là một thuật toán tiền xử lý trong CSP, dùng để giảm miền giá trị của các biến trước khi tìm kiếm. Sau đó, nó thường kết hợp với Backtracking để tìm lời giải. 
+
+Cách hoạt động:
 - Tính nhất quán cung (Arc Consistency): Với mỗi ràng buộc (cung) giữa 2 biến, loại bỏ các giá trị không phù hợp trong miền của biến.
 - Hàng đợi cung: Duy trì một hàng đợi các cung cần kiểm tra, lặp lại cho đến khi không còn thay đổi hoặc phát hiện không có lời giải. Sau khi chạy AC-3, nếu miền của biến nào đó rỗng → Không có lời giải. Nếu không, kết hợp Backtracking để gán giá trị.
 
 _Áp dụng vào 8-puzzle_
+
 Biến và miền:
+
 - 9 biến: Ô (0,0) đến (2,2).
 - Miền ban đầu: Mỗi ô có thể nhận giá trị từ 0 đến 8.
+  
 Ràng buộc:
+
 - All-Different giữa tất cả các ô.
 - Ô (r, c) phải có giá trị đúng theo GOAL_STATE (ví dụ: (0,0) = 1, (2,2) = 0).
 Bước thực hiện AC-3:
+
   Khởi tạo miền:
+  
   - Ô (2,2) cố định là 0 → Miền: {0}.
   - Các ô khác: Miền ban đầu là {0, 1, ..., 8}.
   - Vì (2,2) = 0, loại 0 khỏi miền của tất cả ô khác → Miền các ô khác: {1, 2, ..., 8}.
+    
   Hàng đợi cung:
+  
   - Xem xét các cung giữa các biến (ô (i,j) và (p,q) phải khác nhau).
   - Với mỗi cung, kiểm tra và loại bỏ giá trị không thỏa mãn ràng buộc All-Different.
+    
   Tính nhất quán:
+
   - Ví dụ: Ô (0,0) = 1 (theo GOAL_STATE), loại 1 khỏi miền của các ô khác.
   - Tiếp tục với (0,1) = 2, loại 2 khỏi miền của các ô còn lại, v.v.
   - Lặp lại cho đến khi không còn giá trị nào bị loại hoặc miền của một ô rỗng (thất bại).
+    
 Kết hợp Backtracking:
+
 - Sau khi AC-3 chạy, miền của mỗi ô đã được thu hẹp.
 - Dùng Backtracking để gán giá trị từ các miền đã thu hẹp, kiểm tra ràng buộc All-Different và GOAL_STATE.
 
@@ -487,16 +545,22 @@ _Áp dụng vào 8-puzzle_
 Biến và miền:
 - 9 biến: Ô (0,0) đến (2,2).
 - Miền: Ban đầu {0, 1, ..., 8} cho mỗi ô.
+  
 Ràng buộc:
 - All-Different.
 - Trạng thái cuối phải khớp GOAL_STATE.
+  
 Bước thực hiện:
+
 Khởi tạo:
 - (2,2) = 0 → Loại 0 khỏi miền của các ô khác.
+  
 Gán và kiểm tra:
+
 - Ô (0,0): Gán 1 (theo GOAL_STATE), loại 1 khỏi miền của các ô khác.
 - Ô (0,1): Miền còn lại là {2, 3, ..., 8}, gán 2, loại 2 khỏi các ô còn lại.
 - Nếu miền của một ô trở thành rỗng (ví dụ: không còn số nào để gán), quay lui ngay.
+  
 Tiếp tục:
 - Lặp lại cho đến khi điền hết 8 ô, kiểm tra is_solvable và GOAL_STATE.
 - Nếu không thỏa mãn, quay lui.
