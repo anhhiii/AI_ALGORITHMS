@@ -1,5 +1,4 @@
 # BÀI TOÁN 8 PUZZLE SOLVE
-
 ---
 
 ## 1. Mục tiêu
@@ -39,7 +38,7 @@ Thực hành cài đặt cấu trúc dữ liệu, hàng đợi, cây tìm kiếm
 
 ## 2. Nội dung
 ### 2.1. Nhóm tìm kiếm không thông tin (Uninformed Search)
-- Các thuật toán chính bao gồm: BFS, DFS, UCS, IDS
+Các thuật toán chính bao gồm: BFS, DFS, UCS, IDS
 
 Đầu tiên là BFS (Breath-First Search) - Tìm kiếm theo chiều rộng.
 
@@ -47,6 +46,7 @@ Thực hành cài đặt cấu trúc dữ liệu, hàng đợi, cây tìm kiếm
 - Luôn đảm bảo tìm ra đường đi ngắn nhất (ít bước nhất) đến trạng thái đích nếu tồn tại.
 - Tuy nhiên, nhược điểm lớn là tốn rất nhiều bộ nhớ, vì phải lưu trữ nhiều trạng thái ở mỗi lớp.
 - Không hiệu quả với các trạng thái cách xa đích (nhiều bước).
+
 ![bfs1](https://github.com/user-attachments/assets/b7699676-b4cc-4edb-845a-25c4bee2e614)
 
 Thứ hai là DFS (Depth-First Search) – Tìm kiếm theo chiều sâu
@@ -55,6 +55,7 @@ Thứ hai là DFS (Depth-First Search) – Tìm kiếm theo chiều sâu
 - Có thể nhanh nếu may mắn chọn đúng nhánh gần lời giải, nhưng không đảm bảo tìm được lời giải ngắn nhất.
 - Rất dễ rơi vào vòng lặp nếu không kiểm tra trạng thái đã thăm.
 - Tốn ít bộ nhớ, nhưng không đáng tin cậy cho bài toán 8-puzzle nếu không giới hạn độ sâu.
+  
 ![dfs1](https://github.com/user-attachments/assets/0dcb5b80-4cb7-477d-95a6-b9eb68a5a7df)
 
 Thứ ba là UCS (Uniform-Cost Search) – Tìm kiếm theo chi phí đều
@@ -63,6 +64,7 @@ Thứ ba là UCS (Uniform-Cost Search) – Tìm kiếm theo chi phí đều
 - Tuy nhiên, UCS ưu tiên mở rộng các trạng thái có tổng chi phí nhỏ nhất từ gốc đến hiện tại.
 - Tìm được lời giải tối ưu cả về số bước và chi phí nếu chi phí từng bước không đồng đều.
 - Thường tốn thời gian và bộ nhớ hơn BFS, đặc biệt với nhiều nhánh có cùng chi phí.
+  
 ![ucs1](https://github.com/user-attachments/assets/35f16454-3954-425d-8326-5327e783c49f)
 
 Thứ tư là IDS (Iterative Deepening Search) – Tìm kiếm sâu dần
@@ -71,6 +73,7 @@ Thứ tư là IDS (Iterative Deepening Search) – Tìm kiếm sâu dần
 - Mỗi lần tăng giới hạn, thuật toán tìm đến độ sâu đó rồi quay lại tìm tiếp.
 - Trong 8-puzzle, IDS giải quyết được nhược điểm của DFS (vượt quá sâu, không tối ưu) và khắc phục được hạn chế bộ nhớ của BFS.
 - Tuy nhiên, tốn thời gian hơn một chút, vì các trạng thái đầu tiên bị duyệt lặp lại nhiều lần.
+  
 ![ids (1)](https://github.com/user-attachments/assets/2ab0d5d6-6df4-475e-a5ee-a6357f585a9b)
 
 **Kết luận:**
@@ -90,9 +93,10 @@ IDS đạt lời giải đúng (19 bước) nhưng phải hy sinh thời gian do
   Trong đó: g(n) là chi phí từ trạng thái ban đầu đến n. h(n) là chi phí ước lượng từ n đến trạng thái đích (heuristic)
 
 **Greedy:** Chỉ quan tâm ước lượng đến đích, không tối ưu nhưng rất nhanh
+
 ![greedy](https://github.com/user-attachments/assets/2671ad88-83c4-4e06-85b1-461a1b6e31d1)
 
-**A:**
+**A Star:**
 
 - Hàm đánh giá: f(n) = g(n) + h(n)
 - Tính toán chi phí bằng Manhattan Distance
@@ -100,7 +104,7 @@ IDS đạt lời giải đúng (19 bước) nhưng phải hy sinh thời gian do
 - Hiệu quả trong bài: Tìm ra lời giải ngắn nhất nhưng tốn bộ nhớ nhiều nếu không gian trạng thái lớn.
 ![a](https://github.com/user-attachments/assets/6fe7140e-2ac3-43ac-8da3-fc63034535a3)
 
-**IDA:** kết hợp ưu điểm của A8 và BFS
+**IDA Star:** kết hợp ưu điểm của A8 và BFS
 - Cách hoạt động:
   Duyệt lặp sâu theo giới hạn của hàm f(n) = g(n) + h(n)
   Tăng giới hạn dần cho đến khi tìm ra lời giải
@@ -143,7 +147,7 @@ Các thuật toán chính bao gồm: Simple Hill Climbing, Steepest Ascent Hill 
 - Ưu điểm: Tốt hơn SImple Hill, Ít rơi vào local minima hơn
 - Nhược điểm:Không đmả bảo lời giải tối ưu. Có theer đứng yên nếu tất cả con đều có giá trị bằng nhau.
 - Hiệu quả: Tốt hơn Simple Hill những vẫn có rủi ro không đến goal
-- 
+  
 ![SAHC](https://github.com/user-attachments/assets/7823cbb3-2ad3-447c-960d-e2aa52288bdd)
 
 **Stochastic Hill Climbing**
@@ -226,9 +230,10 @@ Không đảm bảo tìm ra lời giải, ngay cả khi có lời giải tồn t
 
 ### 2.4. Tìm kiếm trong môi trường phức tạp (Search in Complex Environment)
 
-- Các thuật toán chính: And-Or Search, Partially Observable Search, Belief State
+Các thuật toán chính: And-Or Search, Partially Observable Search, Belief State
 
 **Bài toán 8-puzzle trong môi trường phức tạp**
+
 Trong bài toán 8-puzzle, ta có bảng 3x3 với các số từ 0 đến 8, 0 là ô trống. Mục tiêu là di chuyển ô trống để đạt trạng thái đích (ví dụ: ((1, 2, 3), (4, 5, 6), (7, 8, 0))). Trong môi trường phức tạp:
 
 - Không xác định (Non-deterministic): Một hành động có thể dẫn đến nhiều kết quả khác nhau (ví dụ: di chuyển ô trống lên có thể thành công hoặc thất bại do yếu tố ngẫu nhiên).
@@ -238,31 +243,45 @@ Trong bài toán 8-puzzle, ta có bảng 3x3 với các số từ 0 đến 8, 0 
 **And-Or Search**
 
 _Mô tả thuật toán_
+
 And-Or Search được sử dụng trong môi trường không xác định, nơi một hành động có thể dẫn đến nhiều kết quả khác nhau:
-  Cây And-Or:
+  
+Cây And-Or:
 - Or-nodes: Đại diện cho các lựa chọn của tác nhân (ví dụ: chọn hành động nào: lên, xuống, trái, phải).
 - And-nodes: Đại diện cho các kết quả không xác định của một hành động (ví dụ: di chuyển lên có thể thành công hoặc thất bại).
-  Mục tiêu: Tìm một cây giải pháp (solution tree) mà từ trạng thái ban đầu, tác nhân có thể đạt được mục tiêu bất kể kết quả không xác định nào xảy ra.
-  Cách hoạt động:
+  
+Mục tiêu: Tìm một cây giải pháp (solution tree) mà từ trạng thái ban đầu, tác nhân có thể đạt được mục tiêu bất kể kết quả không xác định nào xảy ra.
+
+Cách hoạt động:
 - Bắt đầu từ trạng thái ban đầu, mở rộng cây And-Or.
 - Tại mỗi Or-node, chọn một hành động và tạo And-node cho các kết quả có thể.
 - Tại mỗi And-node, tìm đường dẫn đến mục tiêu cho mọi nhánh (kết quả).
 - Nếu một nhánh không dẫn đến mục tiêu, quay lui và thử hành động khác.
+- 
 _Áp dụng vào 8-puzzle_
+
 - Môi trường không xác định: Giả sử hành động di chuyển ô trống có xác suất thất bại (ví dụ: di chuyển lên có 70% thành công, 30% thất bại và giữ nguyên trạng thái).
 - Trạng thái ban đầu: ((1, 2, 3), (4, 5, 6), (0, 7, 8)).
 - Mục tiêu: ((1, 2, 3), (4, 5, 6), (7, 8, 0)).
 - Bước thực hiện:
+  
   Or-node (Trạng thái ban đầu): Ô trống ở (2,0), các hành động: lên, phải.
+  
   Chọn hành động "lên" → And-node với 2 nhánh:
+  
   - Nhánh 1 (70%): Thành công, ô trống di chuyển lên (1,0) → Trạng thái: ((1, 2, 3), (0, 5, 6), (4, 7, 8)).
   - Nhánh 2 (30%): Thất bại, trạng thái không đổi: ((1, 2, 3), (4, 5, 6), (0, 7, 8)).
+    
   Tiếp tục mở rộng:
+
   -  Từ nhánh 1: Ô trống ở (1,0), hành động: xuống, phải.
   -  Từ nhánh 2: Thử lại hành động khác (ví dụ: "phải").
+    
   Xây dựng cây giải pháp:
+
   -  Mỗi And-node phải có đường dẫn đến mục tiêu cho cả 2 nhánh (thành công và thất bại).
   -  Nếu một hành động không dẫn đến mục tiêu ở cả 2 nhánh, quay lui và thử hành động khác.
+    
 - Kết quả: Cây giải pháp có thể là: "Thử di chuyển phải → Nếu thành công, tiếp tục di chuyển xuống → Nếu thất bại, thử lại di chuyển phải."
 
 _Ưu điểm:_ Xử lý được môi trường không xác định, đảm bảo tìm được lời giải nếu có.
